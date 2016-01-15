@@ -10,17 +10,6 @@
 
 @implementation ChartBaseView
 
-#if !__has_feature(objc_arc)
-
--(void) dealloc
-{
-    OBJC_RELEASE(self.xAxisPosAry);
-    OBJC_RELEASE(self.yAxiaPosAry);
-    
-    [super dealloc];
-}
-#endif
-
 -(id) initWithFrame:(CGRect)frame
 {
     if ( (self = [super initWithFrame:frame]) ) {
@@ -31,32 +20,26 @@
         //! (上, 左, 下, 右)
         _edgeInset = UIEdgeInsetsMake(10, 40, 20, 20);
         
-        //! default value
-        self.drawLineTypeOfX = LineDrawTypeDashLine;
-        self.drawLineTypeOfY = LineDrawTypeDashLine;
-        
         self.backgroundColor = [UIColor clearColor];
         
-        self.xAxisPosAry = [NSMutableArray array];
-        self.yAxiaPosAry = [NSMutableArray array];
-        
-        self.y1AxisMin = self.y1AxisMax = self.y2AxisMin = self.y2AxisMax = 0.0f;
-        
-        self.y1MinValue = self.y2MinValue = CGFLOAT_MAX;
-        self.y1MaxValue = self.y2MaxValue = -CGFLOAT_MAX;
-        
-        self.y2DrawRatio = 0.25f;
-        
-        self.isShowY1MinMaxValue = YES;
-        
-        self.xSectionCount = 6;
-        
         //! X/Y軸預設數
-        self.xDrawLineCount = 12;
-        self.yDrawLineCount = 2;
+        _xDrawLineCount = 12;
+        _yDrawLineCount = 2;
     }
     
     return self;
+}
+
+#pragma mark - Customize methods
+
+-(void) setXLineCount:(NSInteger)xDrawLineCount {
+    
+    _xDrawLineCount = xDrawLineCount;
+}
+
+-(void) setYLineCount:(NSInteger)yDrawLineCount {
+    
+    _yDrawLineCount = yDrawLineCount;
 }
 
 //! 依據畫面大小更新相關點的資訊
@@ -69,14 +52,14 @@
     _rightBottomPoint = CGPointMake(self.frame.size.width - _edgeInset.right, _edgeInset.bottom);
     _rightTopPoint = CGPointMake(self.frame.size.width - _edgeInset.right, self.frame.size.height - _edgeInset.top);
     
-    self.drawOriginContentWidth = self.frame.size.width - (_edgeInset.left + _edgeInset.right);
-    self.drawOriginContentHeight = self.frame.size.height - (_edgeInset.bottom + _edgeInset.top);
+    _drawOriginContentWidth = self.frame.size.width - (_edgeInset.left + _edgeInset.right);
+    _drawOriginContentHeight = self.frame.size.height - (_edgeInset.bottom + _edgeInset.top);
     
-    self.drawContentWidth = self.drawOriginContentWidth;
-    self.drawContentHeight = self.drawOriginContentHeight;
+    _drawContentWidth = self.drawOriginContentWidth;
+    _drawContentHeight = self.drawOriginContentHeight;
     
-    self.rightLineOriginPoint = CGPointMake(_rightBottomPoint.x, (_rightTopPoint.y - _rightBottomPoint.y) / 2 + _originPoint.y);
-    self.leftLineOriginPoint = CGPointMake(_originPoint.x, (_rightTopPoint.y - _rightBottomPoint.y) / 2 + _originPoint.y);
+    _rightLineOriginPoint = CGPointMake(_rightBottomPoint.x, (_rightTopPoint.y - _rightBottomPoint.y) / 2 + _originPoint.y);
+    _leftLineOriginPoint = CGPointMake(_originPoint.x, (_rightTopPoint.y - _rightBottomPoint.y) / 2 + _originPoint.y);
 
     [self setNeedsDisplay];
 }

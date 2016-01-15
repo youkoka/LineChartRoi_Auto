@@ -43,20 +43,20 @@
     
     self.anchorDataAry = [NSMutableArray array];
     
-    NSDictionary *dicData1 = @{@"cost":@"1777869.0000", @"dd":@"2015/07/01", @"roi":@"-34.532465"};
-    NSDictionary *dicData2 = @{@"cost":@"1801928.0000", @"dd":@"2015/07/02", @"roi":@"-77.061070"};
-    NSDictionary *dicData3 = @{@"cost":@"1547810.0000", @"dd":@"2015/07/07", @"roi":@"-34.557859"};
-    NSDictionary *dicData4 = @{@"cost":@"1325624.0000", @"dd":@"2015/08/03", @"roi":@"-71.777140"};
-    NSDictionary *dicData5 = @{@"cost":@"1385683.0000", @"dd":@"2015/08/12", @"roi":@"-88.617526"};
-    NSDictionary *dicData6 = @{@"cost":@"1462692.0000", @"dd":@"2015/08/19", @"roi":@"-59.157361"};
-    NSDictionary *dicData7 = @{@"cost":@"1530751.0000", @"dd":@"2015/08/28", @"roi":@"-88.602587"};
-    NSDictionary *dicData8 = @{@"cost":@"1891987.0000", @"dd":@"2015/10/14", @"roi":@"-67.421393"};
-    NSDictionary *dicData9 = @{@"cost":@"2114046.0000", @"dd":@"2015/10/27", @"roi":@"-67.724448"};
+    NSDictionary *dicData1 = @{@"cost":@"1777869.0000", @"dd":@"2015/07/01", @"roi":@"-4.532465"};
+    NSDictionary *dicData2 = @{@"cost":@"1801928.0000", @"dd":@"2015/07/02", @"roi":@"-7.061070"};
+    NSDictionary *dicData3 = @{@"cost":@"1547810.0000", @"dd":@"2015/07/07", @"roi":@"-4.557859"};
+    NSDictionary *dicData4 = @{@"cost":@"1325624.0000", @"dd":@"2015/08/03", @"roi":@"-1.777140"};
+    NSDictionary *dicData5 = @{@"cost":@"1385683.0000", @"dd":@"2015/08/12", @"roi":@"-28.617526"};
+    NSDictionary *dicData6 = @{@"cost":@"1462692.0000", @"dd":@"2015/08/19", @"roi":@"-19.157361"};
+    NSDictionary *dicData7 = @{@"cost":@"1530751.0000", @"dd":@"2015/08/28", @"roi":@"-18.602587"};
+    NSDictionary *dicData8 = @{@"cost":@"1891987.0000", @"dd":@"2015/10/14", @"roi":@"-17.421393"};
+    NSDictionary *dicData9 = @{@"cost":@"2114046.0000", @"dd":@"2015/10/27", @"roi":@"-17.724448"};
     NSDictionary *dicData10 = @{@"cost":@"1141433.0000", @"dd":@"2015/12/22", @"roi":@"-0.227170"};
     NSDictionary *dicData11 = @{@"cost":@"1284442.0000", @"dd":@"2015/12/30", @"roi":@"0.098486"};
-    NSDictionary *dicData12 = @{@"cost":@"2336105.0000", @"dd":@"2016/01/11", @"roi":@"38.851121"};
+    NSDictionary *dicData12 = @{@"cost":@"2336105.0000", @"dd":@"2016/01/11", @"roi":@"18.851121"};
     
-    NSMutableArray *chartListAry = [NSMutableArray arrayWithObjects:dicData4, dicData5, dicData6, dicData7, dicData8, dicData9, dicData10, dicData11, dicData12, nil];
+    NSMutableArray *chartListAry = [NSMutableArray arrayWithObjects:dicData1, dicData2, dicData3, dicData4, dicData5, dicData6, dicData7, dicData8, dicData9, dicData10, dicData11, dicData12, nil];
     
     for (NSDictionary *dicData in chartListAry) {
     
@@ -74,6 +74,9 @@
     
     self.lineChartView = [[[LineChartView alloc] initWithFrame:rect] autorelease];
     self.lineChartView.isShowY1MinMaxValue = YES;
+    self.lineChartView.xMaxSectionCount = 12;
+    self.lineChartView.xDrawSectionCount = 6;
+    self.lineChartView.yDrawSectionCount = 4;
     self.lineChartView.drawLineTypeOfY = LineDrawTypeDashLine;
     self.lineChartView.drawLineTypeOfX = LineDrawTypeDashLine;
     self.lineChartView.backgroundColor = [UIColor blackColor];

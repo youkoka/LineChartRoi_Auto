@@ -27,6 +27,24 @@
 @end
 @interface LineChartView()
 
+//! y軸最大/小值
+@property (nonatomic, assign) CGFloat y1AxisMin;
+@property (nonatomic, assign) CGFloat y1AxisMax;
+@property (nonatomic, assign) CGFloat y2AxisMin;
+@property (nonatomic, assign) CGFloat y2AxisMax;
+
+//! y軸資料最大/值
+@property (nonatomic, assign) CGFloat y1MinValue;
+@property (nonatomic, assign) CGFloat y1MaxValue;
+@property (nonatomic, assign) CGFloat y2MinValue;
+@property (nonatomic, assign) CGFloat y2MaxValue;
+
+//! 軸線間隔值
+@property (nonatomic, strong) NSMutableArray *xAxisPosAry;
+@property (nonatomic, strong) NSMutableArray *yAxiaPosAry;
+
+
+
 //! 資料
 @property (nonatomic, strong) NSMutableArray *anchorDataAry;
 
@@ -88,6 +106,9 @@
     OBJC_RELEASE(self.anchorDataAry);
     OBJC_RELEASE(self.dateCharSeperateAry);
     
+    OBJC_RELEASE(self.xAxisPosAry);
+    OBJC_RELEASE(self.yAxiaPosAry);
+    
     [super dealloc];
 }
 #endif
@@ -95,6 +116,13 @@
 -(id) initWithFrame:(CGRect)frame
 {
     if ( (self = [super initWithFrame:frame]) ) {
+        
+        //! (上, 左, 下, 右)
+        self.edgeInset = UIEdgeInsetsMake(10, 40, 20, 20);
+        
+        //! default value
+        self.drawLineTypeOfX = LineDrawTypeDashLine;
+        self.drawLineTypeOfY = LineDrawTypeDashLine;
         
         self.xLabelSaveAry = [NSMutableArray array];
         self.yLabelSaveAry = [NSMutableArray array];
@@ -122,12 +150,43 @@
         
         self.dateCharSeperateAry = [NSMutableArray arrayWithObjects:@"/", @"-", nil];
         
+        self.lineChartDrawType = LineChartDrawTypeMonth;
+        self.xMaxSectionCount = 12;
+        self.xDrawSectionCount = 6;
+        self.yDrawSectionCount = 4;
+        
+        self.y1AxisMin = self.y1AxisMax = self.y2AxisMin = self.y2AxisMax = 0.0f;
+        
+        self.y1MinValue = self.y2MinValue = CGFLOAT_MAX;
+        self.y1MaxValue = self.y2MaxValue = -CGFLOAT_MAX;
+        
+        self.xAxisPosAry = [NSMutableArray array];
+        self.yAxiaPosAry = [NSMutableArray array];
+        
+        self.y2DrawRatio = 0.25f;
+        
+        self.isShowY1MinMaxValue = YES;
+        
         [self updateViewWithFrame:frame];
     }
     
     return self;
 }
 
+-(void) setLineChartDrawType:(LineChartDrawType)lineChartDrawType{
+    
+    _lineChartDrawType = lineChartDrawType;
+    
+    if (_lineChartDrawType == LineChartDrawTypeDay) {
+        
+    }
+}
+-(void) setXMaxSectionCount:(NSInteger)xMaxSectionCount {
+    
+    _xMaxSectionCount = xMaxSectionCount;
+    
+    [self setXLineCount:xMaxSectionCount];
+}
 -(void) reloadView {
     
     [self resetViewWithFrame:self.frame];
@@ -177,17 +236,23 @@
                     NSInteger nYear = [sYear integerValue];
                     NSInteger nMonth = [sMonth integerValue];
 
-                    NSInteger perMonthSection = 12 / self.xDrawLineCount;
+                    NSInteger perSection = 1;
                     
-                    NSInteger perLabelSection = 12 / self.xSectionCount;
+                    NSInteger perLabelSection = self.xMaxSectionCount / self.xDrawSectionCount;
                     
                     for (int i = 0; i != self.xDrawLineCount + 1; i++) {
                     
-                        NSString *startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+                        NSString *startDate = @"";
+                        NSString *endDate = @"";
+                        
+                        if (self.lineChartDrawType == LineChartDrawTypeMonth) {
+                            
+                        
+                        startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
 
                         if (i % perLabelSection == 0) {
                         
-                            if ((nMonth + perMonthSection) / 12 == 1) {
+                            if ((nMonth + perSection) / 12 == 1) {
                             
                                 [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
                             }
@@ -201,7 +266,7 @@
                             [self.xAxisLabelAry addObject:@""];
                         }
                         
-                        nMonth += perMonthSection;
+                        nMonth += perSection;
                         
                         if (nMonth / 12 == 1) {
                             
@@ -217,8 +282,8 @@
                             }
                         }
                         
-                        NSString *endDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
-                        
+                        endDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+                        }
                         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(xDateLabel >= %@) AND (xDateLabel < %@)", startDate, endDate];
                         NSArray *arrayForTheSectionDay = [_dataSourceAry  filteredArrayUsingPredicate: predicate];
                         
@@ -802,7 +867,6 @@
         
         //! 計算軸線數量
         //! x軸
-    
         CGFloat xPerWidth = self.drawContentWidth / self.xDrawLineCount;
         
         for (int i = 0; i < self.xDrawLineCount + 1; i++) {
@@ -815,9 +879,13 @@
         //! y軸
         CGFloat ySectionHeight = self.leftLineOriginPoint.y - self.originPoint.y;
         
-        CGFloat yPerHeight = ySectionHeight / self.yDrawLineCount;
+        NSInteger yDrawAxisCount = self.yDrawSectionCount / 2;
         
-        for (int i = 0; i != self.yDrawLineCount; i++) {
+        [self setYLineCount:yDrawAxisCount];
+        
+        CGFloat yPerHeight = ySectionHeight / yDrawAxisCount;
+        
+        for (int i = 0; i != yDrawAxisCount; i++) {
         
             CGFloat height = i * yPerHeight + self.originPoint.y;
             
@@ -828,7 +896,7 @@
             [self.yAxisValueAry addObject:@(yLabel)];
         }
         
-        for (int i = 0; i != self.yDrawLineCount + 1; i++) {
+        for (int i = 0; i != yDrawAxisCount + 1; i++) {
             
             CGFloat height = i * yPerHeight + self.leftLineOriginPoint.y;
             
