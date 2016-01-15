@@ -179,28 +179,42 @@
 
                     NSInteger perMonthSection = 12 / self.xDrawLineCount;
                     
-                    NSInteger count = 0;
+                    NSInteger perLabelSection = 12 / self.xSectionCount;
                     
-                    for (int i = 0; i != self.xDrawLineCount; i++) {
+                    for (int i = 0; i != self.xDrawLineCount + 1; i++) {
                     
                         NSString *startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+
+                        if (i % perLabelSection == 0) {
                         
-                        if ((nMonth + perMonthSection) / 12 == 1) {
-                        
-                            [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
+                            if ((nMonth + perMonthSection) / 12 == 1) {
+                            
+                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
+                            }
+                            else {
+                                
+                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%02d", nMonth]];
+                            }
                         }
                         else {
-                            
-                            [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%02d", nMonth]];
+                         
+                            [self.xAxisLabelAry addObject:@""];
                         }
                         
                         nMonth += perMonthSection;
                         
                         if (nMonth / 12 == 1) {
                             
-                            nYear += 1;
-                            
                             nMonth %= 12;
+                            
+                            if (nMonth == 0) {
+                                
+                                nMonth = 12;
+                            }
+                            else {
+                                
+                                nYear += 1;
+                            }
                         }
                         
                         NSString *endDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
@@ -209,10 +223,6 @@
                         NSArray *arrayForTheSectionDay = [_dataSourceAry  filteredArrayUsingPredicate: predicate];
                         
                         [self.anchorDataAry addObject:arrayForTheSectionDay];
-                        
-                        count = [arrayForTheSectionDay count];
-                        
-                        NSLog(@"%d", count);
                     }
                 }
             }
@@ -543,20 +553,23 @@
         //! 畫Y1連接線
         if(y1StartAnchorPoint.y == self.leftLineOriginPoint.y && y1EndAnchorPoint.y == self.leftLineOriginPoint.y) {
             
+            //! 原點
             [ChartCommon drawLine:context
                        startPoint:y1StartAnchorPoint
                          endPoint:y1EndAnchorPoint
                         lineColor:self.xAxisLineColor width:1.0f];
         }
-        else if (y1StartAnchorPoint.y >= self.leftLineOriginPoint.y && y1EndAnchorPoint.y >= self.leftLineOriginPoint.y) {
+        else if (y1StartAnchorPoint.y > self.leftLineOriginPoint.y && y1EndAnchorPoint.y > self.leftLineOriginPoint.y) {
             
+            //! 原點上
             [ChartCommon drawLine:context
                        startPoint:y1StartAnchorPoint
                          endPoint:y1EndAnchorPoint
                         lineColor:self.y1LineColorUpper width:1.0f];
         }
-        else if(y1StartAnchorPoint.y <= self.leftLineOriginPoint.y && y1EndAnchorPoint.y <= self.leftLineOriginPoint.y) {
+        else if(y1StartAnchorPoint.y < self.leftLineOriginPoint.y && y1EndAnchorPoint.y < self.leftLineOriginPoint.y) {
             
+            //! 原點下
             [ChartCommon drawLine:context
                        startPoint:y1StartAnchorPoint
                          endPoint:y1EndAnchorPoint
@@ -612,6 +625,7 @@
                    startPoint:y2CornerPoint
                      endPoint:y2EndAnchorPoint
                     lineColor:self.y2LineColor width:1.0f];
+        
     }
 }
 
@@ -788,7 +802,6 @@
         
         //! 計算軸線數量
         //! x軸
-        self.xDrawLineCount = [self.anchorDataAry count];
     
         CGFloat xPerWidth = self.drawContentWidth / self.xDrawLineCount;
         

@@ -49,8 +49,10 @@
         
         self.isShowY1MinMaxValue = YES;
         
+        self.xSectionCount = 6;
+        
         //! X/Y軸預設數
-        self.xDrawLineCount = 6;
+        self.xDrawLineCount = 12;
         self.yDrawLineCount = 2;
     }
     
