@@ -78,8 +78,8 @@ typedef NS_ENUM(NSInteger, ZoomScaleAxis)
 //! 資料
 @property (nonatomic, strong) NSMutableArray *dataSourceAry;
 
-//! x 軸最大區間數, ex: 年 : 12, 月 : 28 ~ 31
-@property (nonatomic, assign) NSInteger xMaxSectionCount;
+//! x 軸分群數, ex: 年 : 12, 月 : 28 ~ 31
+@property (nonatomic, assign) NSInteger xGroupSectionValue;
 
 //! x 實際畫區間數
 @property (nonatomic, assign) NSInteger xDrawSectionCount;

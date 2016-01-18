@@ -151,7 +151,7 @@
         self.dateCharSeperateAry = [NSMutableArray arrayWithObjects:@"/", @"-", nil];
         
         self.lineChartDrawType = LineChartDrawTypeMonth;
-        self.xMaxSectionCount = 12;
+        self.xGroupSectionValue = 12;
         self.xDrawSectionCount = 6;
         self.yDrawSectionCount = 4;
         
@@ -181,11 +181,11 @@
         
     }
 }
--(void) setXMaxSectionCount:(NSInteger)xMaxSectionCount {
+-(void) setXGroupSectionValue:(NSInteger)xGroupSectionValue {
     
-    _xMaxSectionCount = xMaxSectionCount;
+    _xGroupSectionValue = xGroupSectionValue;
     
-    [self setXLineCount:xMaxSectionCount];
+    [self setXLineCount:_xGroupSectionValue];
 }
 -(void) reloadView {
     
@@ -237,7 +237,7 @@
                     NSInteger nMonth = [sMonth integerValue];
 
                     NSInteger perSection = 1;
-                    NSInteger perLabelSection = self.xMaxSectionCount / self.xDrawSectionCount;
+                    NSInteger perLabelSection = self.xGroupSectionValue / self.xDrawSectionCount;
                     
                     for (int i = 0; i != self.xDrawLineCount + 1; i++) {
                     
@@ -633,12 +633,10 @@
         if(y1StartAnchorPoint.y == self.leftLineOriginPoint.y && y1EndAnchorPoint.y == self.leftLineOriginPoint.y) {
             
             //! 原點
-            /*
             [ChartCommon drawLine:context
                        startPoint:y1StartAnchorPoint
                          endPoint:y1EndAnchorPoint
                         lineColor:self.xAxisLineColor width:1.0f];
-             */
         }
         else if (y1StartAnchorPoint.y > self.leftLineOriginPoint.y && y1EndAnchorPoint.y > self.leftLineOriginPoint.y) {
             

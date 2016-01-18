@@ -77,7 +77,7 @@
     self.lineChartView = [[[LineChartView alloc] initWithFrame:rect] autorelease];
     self.lineChartView.isShowY1MinMaxValue = YES;
     self.lineChartView.lineChartDrawType = LineChartDrawTypeDay;
-    self.lineChartView.xMaxSectionCount = 30;
+    self.lineChartView.xGroupSectionValue = 30;
     self.lineChartView.xDrawSectionCount = 6;
     self.lineChartView.yDrawSectionCount = 4;
     self.lineChartView.drawLineTypeOfY = LineDrawTypeDashLine;
