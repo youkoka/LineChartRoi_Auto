@@ -56,7 +56,9 @@
     NSDictionary *dicData11 = @{@"cost":@"1284442.0000", @"dd":@"2015/12/30", @"roi":@"0.098486"};
     NSDictionary *dicData12 = @{@"cost":@"2336105.0000", @"dd":@"2016/01/11", @"roi":@"18.851121"};
     
-    NSMutableArray *chartListAry = [NSMutableArray arrayWithObjects:dicData1, dicData2, dicData3, dicData4, dicData5, dicData6, dicData7, dicData8, dicData9, dicData10, dicData11, dicData12, nil];
+//    NSMutableArray *chartListAry = [NSMutableArray arrayWithObjects:dicData1, dicData2, dicData3, dicData4, dicData5, dicData6, dicData7, dicData8, dicData9, dicData10, dicData11, dicData12, nil];
+    
+    NSMutableArray *chartListAry = [NSMutableArray arrayWithObjects:dicData1, dicData2, dicData3, nil];
     
     for (NSDictionary *dicData in chartListAry) {
     
@@ -74,7 +76,8 @@
     
     self.lineChartView = [[[LineChartView alloc] initWithFrame:rect] autorelease];
     self.lineChartView.isShowY1MinMaxValue = YES;
-    self.lineChartView.xMaxSectionCount = 12;
+    self.lineChartView.lineChartDrawType = LineChartDrawTypeDay;
+    self.lineChartView.xMaxSectionCount = 30;
     self.lineChartView.xDrawSectionCount = 6;
     self.lineChartView.yDrawSectionCount = 4;
     self.lineChartView.drawLineTypeOfY = LineDrawTypeDashLine;

@@ -237,7 +237,6 @@
                     NSInteger nMonth = [sMonth integerValue];
 
                     NSInteger perSection = 1;
-                    
                     NSInteger perLabelSection = self.xMaxSectionCount / self.xDrawSectionCount;
                     
                     for (int i = 0; i != self.xDrawLineCount + 1; i++) {
@@ -245,45 +244,60 @@
                         NSString *startDate = @"";
                         NSString *endDate = @"";
                         
-                        if (self.lineChartDrawType == LineChartDrawTypeMonth) {
+                        if (self.lineChartDrawType == LineChartDrawTypeDay) {
                             
-                        
-                        startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+                            startDate = [NSString stringWithFormat:@"%d/%02d/%02d", nYear, nMonth, i + 1];
+                            
+                            endDate = [NSString stringWithFormat:@"%d/%02d/%02d", nYear, nMonth, i + 2];
 
-                        if (i % perLabelSection == 0) {
-                        
-                            if ((nMonth + perSection) / 12 == 1) {
+                            if (i % perLabelSection == 0) {
                             
-                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
+                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d", i + 1]];
                             }
                             else {
                                 
-                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%02d", nMonth]];
+                                [self.xAxisLabelAry addObject:@""];
                             }
                         }
-                        else {
-                         
-                            [self.xAxisLabelAry addObject:@""];
-                        }
-                        
-                        nMonth += perSection;
-                        
-                        if (nMonth / 12 == 1) {
+                        else if (self.lineChartDrawType == LineChartDrawTypeMonth) {
                             
-                            nMonth %= 12;
+                            startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+
+                            if (i % perLabelSection == 0) {
                             
-                            if (nMonth == 0) {
+                                if ((nMonth + perSection) / 12 == 1) {
                                 
-                                nMonth = 12;
+                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
+                                }
+                                else {
+                                    
+                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%02d", nMonth]];
+                                }
                             }
                             else {
-                                
-                                nYear += 1;
+                             
+                                [self.xAxisLabelAry addObject:@""];
                             }
+                            
+                            nMonth += perSection;
+                            
+                            if (nMonth / 12 == 1) {
+                                
+                                nMonth %= 12;
+                                
+                                if (nMonth == 0) {
+                                    
+                                    nMonth = 12;
+                                }
+                                else {
+                                    
+                                    nYear += 1;
+                                }
+                            }
+                            
+                            endDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
                         }
                         
-                        endDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
-                        }
                         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(xDateLabel >= %@) AND (xDateLabel < %@)", startDate, endDate];
                         NSArray *arrayForTheSectionDay = [_dataSourceAry  filteredArrayUsingPredicate: predicate];
                         
@@ -619,10 +633,12 @@
         if(y1StartAnchorPoint.y == self.leftLineOriginPoint.y && y1EndAnchorPoint.y == self.leftLineOriginPoint.y) {
             
             //! 原點
+            /*
             [ChartCommon drawLine:context
                        startPoint:y1StartAnchorPoint
                          endPoint:y1EndAnchorPoint
                         lineColor:self.xAxisLineColor width:1.0f];
+             */
         }
         else if (y1StartAnchorPoint.y > self.leftLineOriginPoint.y && y1EndAnchorPoint.y > self.leftLineOriginPoint.y) {
             
@@ -680,7 +696,7 @@
         CGPoint y2StartAnchorPoint = [[self.y2AnchorAry objectAtIndex:i] CGPointValue];
         CGPoint y2EndAnchorPoint = [[self.y2AnchorAry objectAtIndex:i + 1] CGPointValue];
         CGPoint y2CornerPoint = CGPointMake(y2EndAnchorPoint.x, y2StartAnchorPoint.y);
-        
+
         [ChartCommon drawLine:context
                    startPoint:y2StartAnchorPoint
                      endPoint:y2CornerPoint
@@ -814,11 +830,20 @@
             
             NSInteger count = [sY1 length];
             
-            if (count > 0) {
+            if (count == 1) {
+                
+                /*
+                 y2 值為個位數時, 強制給最大值
+                 避免圖畫起來比例太理譜
+                 */
+                self.y1AxisMax = 10;
+                self.y1AxisMin = -10;
+            }
+            else if (count > 1) {
                 
                 NSMutableString *value = [NSMutableString stringWithString:@"1"];
                 
-                for (int i = 0; i != count; i++) {
+                for (int i = 0; i != count - 1; i++) {
                     
                     [value appendString:@"0"];
                 }
