@@ -210,6 +210,16 @@
         
         if ([_dataSourceAry count] > 0) {
             
+            if (self.anchorDataAry) {
+                
+                [self.anchorDataAry removeAllObjects];
+            }
+            
+            if(self.xAxisLabelAry) {
+                
+                [self.xAxisLabelAry removeAllObjects];
+            }
+
             NSObject *obj = [_dataSourceAry objectAtIndex:0];
             if ([obj isKindOfClass:[AnchorItem class]]) {
             
@@ -791,7 +801,7 @@
                     
                     self.y1MinValue = item.y1Value;
                 }
-                else if (item.y1Value >= self.y1MaxValue) {
+                if (item.y1Value >= self.y1MaxValue) {
                     
                     self.y1MaxValue = item.y1Value;
                 }
@@ -800,7 +810,7 @@
                     
                     self.y2MinValue = item.y2Value;
                 }
-                else if (item.y2Value >= self.y2MaxValue) {
+                if (item.y2Value >= self.y2MaxValue) {
                     
                     self.y2MaxValue = item.y2Value;
                 }
