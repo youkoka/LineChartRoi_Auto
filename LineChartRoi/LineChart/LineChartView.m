@@ -256,13 +256,27 @@
                         
                         if (self.lineChartDrawType == LineChartDrawTypeDay) {
                             
-                            startDate = [NSString stringWithFormat:@"%d/%02d/%02d", nYear, nMonth, i + 1];
+                            NSInteger nStartLabel = (i * perSection) + 1;
                             
-                            endDate = [NSString stringWithFormat:@"%d/%02d/%02d", nYear, nMonth, i + 2];
+                            startDate = [NSString stringWithFormat:@"%zd/%02zd/%02zd", nYear, nMonth, nStartLabel];
+                            
+                            NSInteger nEndLabel = ((i + 1) * perSection) + 1;
+                            
+                            endDate = [NSString stringWithFormat:@"%zd/%02zd/%02zd", nYear, nMonth, nEndLabel];
+                            
+                            if (nStartLabel > self.xGroupSectionValue) {
+                                
+                                nStartLabel = self.xGroupSectionValue;
+                                nEndLabel = self.xGroupSectionValue;
+                            }
+                            else if(nEndLabel > self.xGroupSectionValue) {
+                                
+                                nEndLabel = self.xGroupSectionValue;
+                            }
 
                             if (i % perLabelSection == 0) {
                             
-                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d", i + 1]];
+                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d", nStartLabel]];
                             }
                             else {
                                 
@@ -275,7 +289,7 @@
 
                             if (i % perLabelSection == 0) {
                             
-                                if ((nMonth + perSection) / 12 == 1) {
+                                if ((nMonth + perSection) / 13 == 1) {
                                 
                                     [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
                                 }
@@ -639,30 +653,40 @@
         CGPoint y1StartAnchorPoint = [[self.y1AnchorAry objectAtIndex:i] CGPointValue];
         CGPoint y1EndAnchorPoint = [[self.y1AnchorAry objectAtIndex:i + 1] CGPointValue];
         
+        //! 畫Y2連接線
+        CGPoint y2StartAnchorPoint = [[self.y2AnchorAry objectAtIndex:i] CGPointValue];
+        CGPoint y2EndAnchorPoint = [[self.y2AnchorAry objectAtIndex:i + 1] CGPointValue];
+        CGPoint y2CornerPoint = CGPointMake(y2EndAnchorPoint.x, y2StartAnchorPoint.y);
+        
+        
         //! 畫Y1連接線
         if(y1StartAnchorPoint.y == self.leftLineOriginPoint.y && y1EndAnchorPoint.y == self.leftLineOriginPoint.y) {
             
             //! 原點
-            [ChartCommon drawLine:context
-                       startPoint:y1StartAnchorPoint
-                         endPoint:y1EndAnchorPoint
-                        lineColor:self.xAxisLineColor width:1.0f];
+            [ChartCommon drawLine:context startPoint:y1StartAnchorPoint endPoint:y1EndAnchorPoint lineColor:self.xAxisLineColor width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2StartAnchorPoint endPoint:y2CornerPoint lineColor:self.y2LineColor width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2CornerPoint endPoint:y2EndAnchorPoint lineColor:self.y2LineColor width:1.0f];
         }
         else if (y1StartAnchorPoint.y > self.leftLineOriginPoint.y && y1EndAnchorPoint.y > self.leftLineOriginPoint.y) {
             
             //! 原點上
-            [ChartCommon drawLine:context
-                       startPoint:y1StartAnchorPoint
-                         endPoint:y1EndAnchorPoint
-                        lineColor:self.y1LineColorUpper width:1.0f];
+            [ChartCommon drawLine:context startPoint:y1StartAnchorPoint endPoint:y1EndAnchorPoint lineColor:self.y1LineColorUpper width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2StartAnchorPoint endPoint:y2CornerPoint lineColor:self.y2LineColor width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2CornerPoint endPoint:y2EndAnchorPoint lineColor:self.y2LineColor width:1.0f];
+            
         }
         else if(y1StartAnchorPoint.y < self.leftLineOriginPoint.y && y1EndAnchorPoint.y < self.leftLineOriginPoint.y) {
             
             //! 原點下
-            [ChartCommon drawLine:context
-                       startPoint:y1StartAnchorPoint
-                         endPoint:y1EndAnchorPoint
-                        lineColor:self.y1LineColorLower width:1.0f];
+            [ChartCommon drawLine:context startPoint:y1StartAnchorPoint endPoint:y1EndAnchorPoint lineColor:self.y1LineColorLower width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2StartAnchorPoint endPoint:y2CornerPoint lineColor:self.y2LineColor width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2CornerPoint endPoint:y2EndAnchorPoint lineColor:self.y2LineColor width:1.0f];
         }
         else {
             
@@ -675,46 +699,39 @@
             
             if (y1StartAnchorPoint.y >= self.leftLineOriginPoint.y) {
                 
-                [ChartCommon drawLine:context
-                           startPoint:y1StartAnchorPoint
-                             endPoint:mOrginPoint
-                            lineColor:self.y1LineColorUpper width:1.0f];
+                [ChartCommon drawLine:context startPoint:y1StartAnchorPoint endPoint:mOrginPoint lineColor:self.y1LineColorUpper width:1.0f];
                 
-                [ChartCommon drawLine:context
-                           startPoint:mOrginPoint
-                             endPoint:y1EndAnchorPoint
-                            lineColor:self.y1LineColorLower width:1.0f];
+                CGFloat mY = (mOrginPoint.x - y1EndAnchorPoint.x) / (mOrginPoint.y - y1EndAnchorPoint.y);
+                
+                if (mY >= 0) {
+                    
+                    [ChartCommon drawLine:context startPoint:mOrginPoint endPoint:y1EndAnchorPoint lineColor:self.y1LineColorUpper width:1.0f];
+                }
+                else {
+                    
+                    [ChartCommon drawLine:context startPoint:mOrginPoint endPoint:y1EndAnchorPoint lineColor:self.y1LineColorLower width:1.0f];
+                }
             }
             else {
                 
-                [ChartCommon drawLine:context
-                           startPoint:y1StartAnchorPoint
-                             endPoint:mOrginPoint
-                            lineColor:self.y1LineColorLower width:1.0f];
+                CGFloat mY = (y1StartAnchorPoint.x - mOrginPoint.x) / (y1StartAnchorPoint.y - mOrginPoint.y);
                 
-                [ChartCommon drawLine:context
-                           startPoint:mOrginPoint
-                             endPoint:y1EndAnchorPoint
-                            lineColor:self.y1LineColorUpper width:1.0f];
+                if (mY < 0) {
+                    
+                    [ChartCommon drawLine:context startPoint:y1StartAnchorPoint endPoint:mOrginPoint lineColor:self.y1LineColorUpper width:1.0f];
+                }
+                else {
+                    
+                    [ChartCommon drawLine:context startPoint:y1StartAnchorPoint endPoint:mOrginPoint lineColor:self.y1LineColorLower width:1.0f];
+                }
                 
+                [ChartCommon drawLine:context startPoint:mOrginPoint endPoint:y1EndAnchorPoint lineColor:self.y1LineColorUpper width:1.0f];
             }
+            
+            [ChartCommon drawLine:context startPoint:y2StartAnchorPoint endPoint:y2CornerPoint lineColor:self.y2LineColor width:1.0f];
+            
+            [ChartCommon drawLine:context startPoint:y2CornerPoint endPoint:y2EndAnchorPoint lineColor:self.y2LineColor width:1.0f];
         }
-        
-        //! 畫Y2連接線
-        CGPoint y2StartAnchorPoint = [[self.y2AnchorAry objectAtIndex:i] CGPointValue];
-        CGPoint y2EndAnchorPoint = [[self.y2AnchorAry objectAtIndex:i + 1] CGPointValue];
-        CGPoint y2CornerPoint = CGPointMake(y2EndAnchorPoint.x, y2StartAnchorPoint.y);
-
-        [ChartCommon drawLine:context
-                   startPoint:y2StartAnchorPoint
-                     endPoint:y2CornerPoint
-                    lineColor:self.y2LineColor width:1.0f];
-        
-        [ChartCommon drawLine:context
-                   startPoint:y2CornerPoint
-                     endPoint:y2EndAnchorPoint
-                    lineColor:self.y2LineColor width:1.0f];
-        
     }
 }
 
