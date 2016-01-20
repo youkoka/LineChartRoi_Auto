@@ -152,6 +152,7 @@
         
         self.lineChartDrawType = LineChartDrawTypeMonth;
         self.xGroupSectionValue = 12;
+        self.perLabelSection = 2;
         self.xDrawSectionCount = 6;
         self.yDrawSectionCount = 4;
         
@@ -176,10 +177,6 @@
 -(void) setLineChartDrawType:(LineChartDrawType)lineChartDrawType{
     
     _lineChartDrawType = lineChartDrawType;
-    
-    if (_lineChartDrawType == LineChartDrawTypeDay) {
-        
-    }
 }
 -(void) setXGroupSectionValue:(NSInteger)xGroupSectionValue {
     
@@ -247,7 +244,8 @@
                     NSInteger nMonth = [sMonth integerValue];
 
                     NSInteger perSection = 1;
-                    NSInteger perLabelSection = self.xGroupSectionValue / self.xDrawSectionCount;
+//                    NSInteger perLabelSection = self.xGroupSectionValue / self.xDrawSectionCount;
+                    NSInteger nCurrentSectionCount = 0;
                     
                     for (int i = 0; i != self.xDrawLineCount + 1; i++) {
                     
@@ -274,9 +272,22 @@
                                 nEndLabel = self.xGroupSectionValue;
                             }
 
-                            if (i % perLabelSection == 0) {
+                            if (i % self.perLabelSection == 0 && nCurrentSectionCount < self.xDrawSectionCount) {
                             
-                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d", nStartLabel]];
+                                [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d", i]];
+                                
+                                nCurrentSectionCount++;
+                            }
+                            else if(nCurrentSectionCount == self.xDrawSectionCount) {
+                                
+                                if (i == self.xGroupSectionValue) {
+                                    
+                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d", i]];
+                                }
+                                else {
+                                    
+                                    [self.xAxisLabelAry addObject:@""];
+                                }
                             }
                             else {
                                 
@@ -287,7 +298,7 @@
                             
                             startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
 
-                            if (i % perLabelSection == 0) {
+                            if (i % self.perLabelSection == 0) {
                             
                                 if ((nMonth + perSection) / 13 == 1) {
                                 

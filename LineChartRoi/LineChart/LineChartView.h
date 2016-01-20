@@ -81,6 +81,9 @@ typedef NS_ENUM(NSInteger, ZoomScaleAxis)
 //! x 軸分群數, ex: 年 : 12, 月 : 28 ~ 31
 @property (nonatomic, assign) NSInteger xGroupSectionValue;
 
+//! section 內最多幾個值
+@property (nonatomic, assign) NSInteger perLabelSection;
+
 //! x 實際畫區間數
 @property (nonatomic, assign) NSInteger xDrawSectionCount;
 

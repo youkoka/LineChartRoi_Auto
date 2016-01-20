@@ -52,8 +52,8 @@
     self.anchorDataAry2 = [NSMutableArray array];
     
     NSDictionary *dicData1 = @{@"cost":@"1777869.0000", @"dd":@"2015/07/01", @"roi":@"-4.532465"};
-    NSDictionary *dicData2 = @{@"cost":@"1801928.0000", @"dd":@"2015/07/02", @"roi":@"-7.061070"};
-    NSDictionary *dicData3 = @{@"cost":@"1547810.0000", @"dd":@"2015/07/07", @"roi":@"4.557859"};
+    NSDictionary *dicData2 = @{@"cost":@"1801928.0000", @"dd":@"2015/07/26", @"roi":@"-7.061070"};
+    NSDictionary *dicData3 = @{@"cost":@"1547810.0000", @"dd":@"2015/07/27", @"roi":@"4.557859"};
     NSDictionary *dicData4 = @{@"cost":@"1325624.0000", @"dd":@"2015/07/28", @"roi":@"-1.777140"};
     NSDictionary *dicData5 = @{@"cost":@"1385683.0000", @"dd":@"2015/08/12", @"roi":@"-28.617526"};
     NSDictionary *dicData6 = @{@"cost":@"1462692.0000", @"dd":@"2015/08/19", @"roi":@"-19.157361"};
@@ -106,7 +106,8 @@
     self.lineChartView1 = [[[LineChartView alloc] initWithFrame:rect1] autorelease];
     self.lineChartView1.isShowY1MinMaxValue = YES;
     self.lineChartView1.lineChartDrawType = LineChartDrawTypeDay;
-    self.lineChartView1.xGroupSectionValue = 28;
+    self.lineChartView1.xGroupSectionValue = 30;
+    self.lineChartView1.perLabelSection = 5;
     self.lineChartView1.xDrawSectionCount = 6;
     self.lineChartView1.yDrawSectionCount = 4;
     self.lineChartView1.drawLineTypeOfY = LineDrawTypeDashLine;
@@ -128,6 +129,7 @@
     self.lineChartView2.isShowY1MinMaxValue = YES;
     self.lineChartView2.lineChartDrawType = LineChartDrawTypeMonth;
     self.lineChartView2.xGroupSectionValue = 12;
+    self.lineChartView1.perLabelSection = 2;
     self.lineChartView2.xDrawSectionCount = 6;
     self.lineChartView2.yDrawSectionCount = 4;
     self.lineChartView2.drawLineTypeOfY = LineDrawTypeDashLine;
