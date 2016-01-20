@@ -138,7 +138,7 @@
 
         self.y1LineColorLower = [UIColor greenColor];
         self.y1LineColorUpper = [UIColor redColor];
-        self.y2LineColor = [UIColor blueColor];
+        self.y2LineColor = [UIColor colorWithRed:12/255.0 green:139/255.0 blue:207/255.0 alpha:1];;
         
         self.y1AnchorAry = [NSMutableArray array];
         self.y2AnchorAry = [NSMutableArray array];
@@ -296,17 +296,17 @@
                         }
                         else if (self.lineChartDrawType == LineChartDrawTypeMonth) {
                             
-                            startDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+                            startDate = [NSString stringWithFormat:@"%zd/%02zd/%@", nYear, nMonth, @"01"];
 
                             if (i % self.perLabelSection == 0) {
                             
                                 if ((nMonth + perSection) / 13 == 1) {
                                 
-                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%d/%02d", nYear, nMonth]];
+                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%zd/%02zd", nYear, nMonth]];
                                 }
                                 else {
                                     
-                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%02d", nMonth]];
+                                    [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%02zd", nMonth]];
                                 }
                             }
                             else {
@@ -330,7 +330,7 @@
                                 }
                             }
                             
-                            endDate = [NSString stringWithFormat:@"%d/%02d/%@", nYear, nMonth, @"01"];
+                            endDate = [NSString stringWithFormat:@"%zd/%02zd/%@", nYear, nMonth, @"01"];
                         }
                         
                         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(xDateLabel >= %@) AND (xDateLabel < %@)", startDate, endDate];
