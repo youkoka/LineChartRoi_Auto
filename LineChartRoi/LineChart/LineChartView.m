@@ -300,7 +300,7 @@
 
                             if (i % self.perLabelSection == 0) {
                             
-                                if ((nMonth + perSection) / 13 == 1) {
+                                if ((nMonth + self.perLabelSection) / 13 == 1) {
                                 
                                     [self.xAxisLabelAry addObject:[NSString stringWithFormat:@"%zd/%02zd", nYear, nMonth]];
                                 }
